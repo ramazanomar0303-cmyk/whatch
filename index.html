@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RisaWatch — Люкс Сағат Дүкені</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; transition: background 0.3s, color 0.3s; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--surface); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+    /* ── CSS VARIABLES ── */
+    :root {
+      --gold: #c9a96e;
+      --gold-dark: #a07a3e;
+    }
+    body.dark {
+      --bg: #0a0a0a; --surface: #111111; --surface-hover: #1a1a1a;
+      --border: rgba(255,255,255,0.08); --text: #ffffff;
+      --text-muted: rgba(255,255,255,0.5); --glass: rgba(255,255,255,0.05);
+      --nav-bg: rgba(10,10,10,0.9);
+      --hero-grad: radial-gradient(ellipse at 20% 50%, rgba(201,169,110,0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, rgba(201,169,110,0.1) 0%, transparent 40%);
+      --card-fav-bg: rgba(0,0,0,0.5);
+    }
+    body.light {
+      --bg: #fafafa; --surface: #ffffff; --surface-hover: #f0f0f0;
+      --border: rgba(0,0,0,0.08); --text: #0a0a0a;
+      --text-muted: rgba(0,0,0,0.4); --glass: rgba(0,0,0,0.03);
+      --nav-bg: rgba(250,250,250,0.9);
+      --hero-grad: radial-gradient(ellipse at 20% 50%, rgba(201,169,110,0.1) 0%, transparent 50%);
+      --card-fav-bg: rgba(255,255,255,0.8);
+    }
+    body { background: var(--bg); color: var(--text); }
+
+    .serif { font-family: 'Playfair Display', serif; }
+    .gold { color: var(--gold); }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 0 2rem; height: 72px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--nav-bg); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif; font-size: 1.6rem;
+      font-weight: 700; color: var(--gold); cursor: pointer;
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-link {
+      background: none; border: none; color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      cursor: pointer; transition: color 0.2s; letter-spacing: 0.5px;
+    }
+    .nav-link:hover, .nav-link.active { color: var(--gold); }
+    .nav-actions { display: flex; align-items: center; gap: 1rem; }
+    .icon-btn {
+      background: none; border: none; color: var(--text); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0.5rem; border-radius: 50%; transition: all 0.2s; position: relative;
+    }
+    .icon-btn:hover { background: var(--glass); color: var(--gold); }
+    .badge {
+      position: absolute; top: 0; right: 0; background: var(--gold); color: #000;
+      font-size: 10px; font-weight: 700; width: 18px; height: 18px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden; padding: 100px 2rem 2rem;
+    }
+    .hero-bg { position: absolute; inset: 0; background: var(--hero-grad); }
+    .hero-content { text-align: center; z-index: 1; max-width: 800px; }
+    .hero-tag {
+      display: inline-block; border: 1px solid var(--gold); color: var(--gold);
+      padding: 0.4rem 1.2rem; border-radius: 100px; font-size: 0.8rem;
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.5rem;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif; font-size: clamp(3rem,8vw,6rem);
+      line-height: 1.1; margin-bottom: 1.5rem;
+    }
+    .hero-sub { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 3rem; line-height: 1.6; }
+
+    .btn-primary {
+      background: var(--gold); color: #000; border: none;
+      padding: 0.9rem 2.5rem; border-radius: 100px;
+      font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.3s; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .btn-primary:hover { background: var(--gold-dark); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,169,110,0.3); }
+    .btn-outline {
+      background: transparent; color: var(--text); border: 1px solid var(--border);
+      padding: 0.9rem 2.5rem; border-radius: 100px;
+      font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+    .hero-pills { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem; }
+    .hero-pill {
+      background: var(--glass); border: 1px solid var(--border); border-radius: 100px;
+      padding: 0.5rem 1rem; font-size: 0.85rem; color: var(--text-muted);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .hero-pill:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── SECTIONS ── */
+    .section { padding: 5rem 2rem; max-width: 1400px; margin: 0 auto; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,4vw,2.8rem); margin-bottom: 0.5rem; }
+    .section-sub { color: var(--text-muted); margin-bottom: 3rem; }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 1.5rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 1.5rem; }
+
+    /* ── WATCH CARD ── */
+    .watch-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden; cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1); position: relative;
+    }
+    .watch-card:hover { transform: translateY(-8px); box-shadow: 0 30px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(201,169,110,0.2); border-color: rgba(201,169,110,0.2); }
+    .watch-card-img { width: 100%; height: 240px; object-fit: cover; transition: transform 0.6s ease; display: block; }
+    .watch-card:hover .watch-card-img { transform: scale(1.05); }
+    .watch-card-body { padding: 1.2rem; }
+    .watch-brand { font-size: 0.75rem; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .watch-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .watch-price { font-size: 1.1rem; font-weight: 600; color: var(--gold); }
+    .card-fav {
+      position: absolute; top: 1rem; right: 1rem;
+      background: var(--card-fav-bg); border: none; border-radius: 50%;
+      width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s; backdrop-filter: blur(10px);
+    }
+    .card-fav:hover { transform: scale(1.1); }
+    .watch-badge {
+      position: absolute; top: 1rem; left: 1rem;
+      background: var(--gold); color: #000; font-size: 0.7rem; font-weight: 700;
+      padding: 0.2rem 0.6rem; border-radius: 100px; letter-spacing: 1px; text-transform: uppercase;
+    }
+    .stars { display: flex; gap: 2px; color: var(--gold); align-items: center; }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem; margin-bottom: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;
+    }
+    .filter-group { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+    .filter-chip {
+      border: 1px solid var(--border); background: transparent; color: var(--text-muted);
+      padding: 0.4rem 1rem; border-radius: 100px; font-size: 0.85rem; cursor: pointer;
+      transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+    }
+    .filter-chip.active, .filter-chip:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,169,110,0.07); }
+    .search-wrap { position: relative; flex: 1; min-width: 200px; }
+    .search-icon { position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+    .search-input {
+      width: 100%; background: var(--glass); border: 1px solid var(--border);
+      border-radius: 100px; padding: 0.6rem 1.2rem 0.6rem 2.8rem;
+      color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--gold); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(10px); z-index: 200;
+      display: flex; align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 24px;
+      padding: 2.5rem; width: 100%; max-width: 440px; position: relative;
+      max-height: 90vh; overflow-y: auto;
+    }
+    .modal-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; letter-spacing: 0.5px; }
+    .form-input {
+      width: 100%; background: var(--glass); border: 1px solid var(--border); border-radius: 12px;
+      padding: 0.8rem 1.1rem; color: var(--text); font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; outline: none; transition: border-color 0.2s;
+    }
+    .form-input:focus { border-color: var(--gold); }
+    textarea.form-input { resize: vertical; }
+    select.form-input { cursor: pointer; }
+
+    /* ── CART DRAWER ── */
+    .cart-drawer {
+      position: fixed; right: 0; top: 0; bottom: 0; width: min(420px,100vw);
+      background: var(--surface); border-left: 1px solid var(--border); z-index: 150;
+      display: flex; flex-direction: column;
+      transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .cart-drawer.open { transform: translateX(0); }
+    .cart-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .cart-items { flex: 1; overflow-y: auto; padding: 1.5rem; }
+    .cart-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--border); }
+    .cart-item-img { width: 70px; height: 70px; object-fit: cover; border-radius: 12px; flex-shrink: 0; }
+    .cart-footer { padding: 1.5rem 2rem; border-top: 1px solid var(--border); }
+    .cart-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600; }
+    .qty-control { display: flex; align-items: center; gap: 0.5rem; background: var(--glass); border: 1px solid var(--border); border-radius: 100px; padding: 0.2rem; }
+    .qty-btn { background: none; border: none; color: var(--text); cursor: pointer; display: flex; align-items: center; padding: 0.2rem 0.4rem; transition: color 0.2s; }
+    .qty-btn:hover { color: var(--gold); }
+
+    /* ── CHAT ── */
+    .chat-widget { position: fixed; bottom: 2rem; right: 2rem; z-index: 140; }
+    .chat-btn {
+      width: 56px; height: 56px; border-radius: 50%; background: var(--gold);
+      border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 30px rgba(201,169,110,0.4); transition: all 0.3s; color: #000;
+    }
+    .chat-btn:hover { transform: scale(1.1); box-shadow: 0 12px 40px rgba(201,169,110,0.5); }
+    .chat-box {
+      position: absolute; bottom: 70px; right: 0; width: min(360px,90vw);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      display: none;
+    }
+    .chat-box.open { display: block; }
+    .chat-header { background: var(--gold); padding: 1rem 1.2rem; display: flex; align-items: center; gap: 0.7rem; }
+    .chat-messages { height: 300px; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.7rem; }
+    .msg { max-width: 80%; padding: 0.7rem 1rem; border-radius: 16px; font-size: 0.88rem; line-height: 1.5; }
+    .msg.bot { background: var(--glass); border: 1px solid var(--border); border-radius: 4px 16px 16px 16px; }
+    .msg.user { background: var(--gold); color: #000; align-self: flex-end; border-radius: 16px 4px 16px 16px; }
+    .chat-input-row { padding: 0.8rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; }
+    .chat-input-field {
+      flex: 1; background: var(--glass); border: 1px solid var(--border);
+      border-radius: 100px; padding: 0.6rem 1rem; color: var(--text);
+      font-size: 0.85rem; outline: none; font-family: 'DM Sans', sans-serif;
+    }
+    .chat-send {
+      background: var(--gold); border: none; border-radius: 50%; width: 36px; height: 36px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; color: #000; flex-shrink: 0;
+    }
+
+    /* ── NOTIFICATION ── */
+    .notification {
+      position: fixed; top: 90px; right: 1.5rem; z-index: 300;
+      background: var(--surface); border: 1px solid rgba(201,169,110,0.2); border-left: 3px solid var(--gold);
+      border-radius: 12px; padding: 0.8rem 1.2rem; max-width: 320px; font-size: 0.9rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: slideIn 0.3s ease;
+      display: none;
+    }
+    @keyframes slideIn { from { opacity:0; transform: translateX(20px); } to { opacity:1; transform: translateX(0); } }
+
+    /* ── PRODUCT PAGE ── */
+    .product-page { max-width: 1200px; margin: 0 auto; padding: 100px 2rem 4rem; }
+    .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+    .product-img { width: 100%; border-radius: 24px; object-fit: cover; aspect-ratio: 1; }
+    .product-brand { font-size: 0.8rem; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .product-name { font-family: 'Playfair Display', serif; font-size: clamp(2rem,4vw,3rem); line-height: 1.2; margin-bottom: 1rem; }
+    .product-price { font-size: 2rem; font-weight: 700; color: var(--gold); margin-bottom: 1.5rem; }
+    .product-desc { color: var(--text-muted); line-height: 1.7; margin-bottom: 2rem; }
+    .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 2rem; }
+    .spec-item { background: var(--glass); border: 1px solid var(--border); border-radius: 12px; padding: 0.8rem 1rem; }
+    .spec-label { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 0.2rem; }
+    .spec-val { font-weight: 500; font-size: 0.95rem; }
+
+    /* ── ADMIN ── */
+    .admin-layout { display: flex; min-height: 100vh; padding-top: 72px; }
+    .admin-sidebar { width: 240px; background: var(--surface); border-right: 1px solid var(--border); padding: 2rem 1rem; position: fixed; top: 72px; bottom: 0; overflow-y: auto; }
+    .admin-content { flex: 1; margin-left: 240px; padding: 2rem; }
+    .admin-nav-item {
+      display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 1rem; border-radius: 10px;
+      cursor: pointer; transition: all 0.2s; font-size: 0.9rem; color: var(--text-muted);
+      border: none; background: none; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; margin-bottom: 0.2rem;
+    }
+    .admin-nav-item:hover, .admin-nav-item.active { background: rgba(201,169,110,0.07); color: var(--gold); }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; }
+    .stat-val { font-size: 2rem; font-weight: 700; color: var(--gold); font-family: 'Playfair Display', serif; }
+    .stat-label { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem; }
+    .table { width: 100%; border-collapse: collapse; }
+    .table th { text-align: left; padding: 0.8rem 1rem; font-size: 0.8rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid var(--border); font-weight: 500; }
+    .table td { padding: 0.9rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.9rem; }
+    .table tr:hover td { background: var(--glass); }
+    .tag { display: inline-block; padding: 0.25rem 0.7rem; border-radius: 100px; font-size: 0.75rem; font-weight: 500; }
+    .tag-gold { background: rgba(201,169,110,0.13); color: var(--gold); }
+
+    /* ── PROFILE ── */
+    .profile-layout { max-width: 900px; margin: 0 auto; padding: 100px 2rem 4rem; }
+    .profile-tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+    .profile-tab { background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-muted); padding: 0.7rem 1.2rem; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; transition: all 0.2s; margin-bottom: -1px; }
+    .profile-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    /* ── CHECKOUT ── */
+    .checkout-step-num {
+      width: 36px; height: 36px; border-radius: 50%; background: var(--border); color: var(--text-muted);
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: 600; transition: all 0.3s;
+    }
+    .checkout-step-num.active { background: var(--gold); color: #000; }
+    .checkout-step-num.done { background: #22c55e; color: #fff; }
+
+    /* ── TRACK ── */
+    .track-step { display: flex; gap: 1rem; position: relative; padding-bottom: 1.5rem; }
+    .track-step:last-child { padding-bottom: 0; }
+    .track-dot { width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; margin-top: 0.25rem; border: 2px solid var(--border); }
+    .track-dot.done { background: var(--gold); border-color: var(--gold); }
+    .track-dot.current { background: transparent; border-color: var(--gold); box-shadow: 0 0 0 4px rgba(201,169,110,0.2); }
+    .track-line { position: absolute; left: 7px; top: 20px; bottom: 0; width: 2px; background: var(--border); }
+
+    /* ── IMAGE UPLOAD ── */
+    .img-upload-box {
+      border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem;
+      text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 1rem;
+    }
+    .img-upload-box:hover { border-color: var(--gold); }
+    .img-upload-box input[type="file"] { display: none; }
+    .img-preview { width: 100%; max-height: 160px; object-fit: cover; border-radius: 8px; margin-top: 0.5rem; display: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .admin-sidebar { display: none; }
+      .admin-content { margin-left: 0; }
+      .grid-3, .grid-4 { grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); }
+      .product-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .nav-links { display: none; }
+    }
+
+    /* ── PAGES ── */
+    .page { display: none; }
+    .page.active { display: block; }
+  </style>
+</head>
+<body class="dark">
+
+<!-- ══ NOTIFICATION ══ -->
+<div class="notification" id="notification"></div>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="nav">
+  <span class="nav-logo" onclick="goTo('home')">RisaWatch</span>
+  <div class="nav-links">
+    <button class="nav-link active" id="nav-home" onclick="goTo('home')">Басты</button>
+    <button class="nav-link" id="nav-catalog" onclick="goTo('catalog')">Каталог</button>
+    <button class="nav-link" id="nav-about" onclick="goTo('about')">Біз туралы</button>
+    <button class="nav-link" id="nav-admin" onclick="goTo('admin')" style="display:none">Админ</button>
+    <button class="nav-link" id="nav-profile" onclick="goTo('profile')" style="display:none">Профиль</button>
+  </div>
+  <div class="nav-actions">
+    <button class="icon-btn" onclick="toggleTheme()" title="Тема">
+      <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <button class="icon-btn" onclick="goTo('catalog')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <button class="icon-btn" id="nav-user-btn" onclick="onUserClick()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </button>
+    <button class="icon-btn" onclick="openCart()" style="position:relative">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+      <span class="badge" id="cart-badge" style="display:none">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══ PAGES ══ -->
+
+<!-- ── HOME ── -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <span class="hero-tag">Люкс Сағат Дүкені</span>
+      <h1 class="hero-title serif">Уақытты <em style="color:var(--gold)">Өнермен</em><br>Өлшеңіз</h1>
+      <p class="hero-sub">Дүниенің ең үздік сағат брендтері. Rolex, Omega, Patek Philippe және тағы басқалары. Тек RisaWatch-те.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <button class="btn-primary" onclick="goTo('catalog')">Каталогты қарау <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+        <button class="btn-outline" onclick="goTo('about')">Біз туралы</button>
+      </div>
+      <div class="hero-pills">
+        <span class="hero-pill" onclick="filterBrand('Rolex')">Rolex</span>
+        <span class="hero-pill" onclick="filterBrand('Omega')">Omega</span>
+        <span class="hero-pill" onclick="filterBrand('Cartier')">Cartier</span>
+        <span class="hero-pill" onclick="filterBrand('IWC')">IWC</span>
+        <span class="hero-pill" onclick="filterBrand('Hublot')">Hublot</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);padding:2rem">
+      <div style="text-align:center"><p style="font-size:2rem;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif">30+</p><p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.3rem">Люкс брендтер</p></div>
+      <div style="text-align:center"><p style="font-size:2rem;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif">500+</p><p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.3rem">Қанағатты клиент</p></div>
+      <div style="text-align:center"><p style="font-size:2rem;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif">100%</p><p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.3rem">Оригинал</p></div>
+      <div style="text-align:center"><p style="font-size:2rem;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif">3 күн</p><p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.3rem">Жеткізу</p></div>
+    </div>
+  </div>
+
+  <!-- Featured -->
+  <div class="section">
+    <p class="section-title serif">Таңдаулы <span style="color:var(--gold)">Сағаттар</span></p>
+    <p class="section-sub">Ең жоғары рейтингті коллекциялар</p>
+    <div class="grid-4" id="home-featured"></div>
+  </div>
+
+  <!-- Men -->
+  <div style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:4rem 0">
+    <div class="section" style="padding-top:0;padding-bottom:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem">
+        <div><p class="section-title serif">Ерлер <span style="color:var(--gold)">Коллекциясы</span></p><p class="section-sub" style="margin-bottom:0">Күшті, классикалық дизайн</p></div>
+        <button class="btn-outline" onclick="filterGender('male')">Барлығы</button>
+      </div>
+      <div class="grid-4" id="home-men"></div>
+    </div>
+  </div>
+
+  <!-- Women -->
+  <div class="section">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem">
+      <div><p class="section-title serif">Әйелдер <span style="color:var(--gold)">Коллекциясы</span></p><p class="section-sub" style="margin-bottom:0">Элеганттылық пен нәзіктік</p></div>
+      <button class="btn-outline" onclick="filterGender('female')">Барлығы</button>
+    </div>
+    <div class="grid-4" id="home-women"></div>
+  </div>
+
+  <!-- Trending -->
+  <div style="background:var(--surface);border-top:1px solid var(--border);padding:4rem 0">
+    <div class="section" style="padding-top:0;padding-bottom:0">
+      <p class="section-title serif">Трендтегі <span style="color:var(--gold)">Luxury</span></p>
+      <p class="section-sub">Ең сұранысты үлгілер</p>
+      <div class="grid-4" id="home-trending"></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div style="text-align:center;padding:6rem 2rem;background:radial-gradient(ellipse at center,rgba(201,169,110,0.07) 0%,transparent 70%)">
+    <p class="section-title serif" style="margin-bottom:1rem">Сағатыңызды <span style="color:var(--gold)">Тауып Алыңыз</span></p>
+    <p style="color:var(--text-muted);margin-bottom:2rem">AI Chatbot сізге мінсіз сағат таңдауға көмектеседі</p>
+    <button class="btn-primary" onclick="openChat()">AI Кеңесші</button>
+  </div>
+
+  <!-- Footer -->
+  <footer style="background:var(--surface);border-top:1px solid var(--border);padding:3rem 2rem;margin-top:0">
+    <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:2rem">
+      <div>
+        <p style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold);margin-bottom:0.8rem">RisaWatch</p>
+        <p style="color:var(--text-muted);line-height:1.7;font-size:0.9rem">Қазақстандағы премиум люкс сағат платформасы. Уақытты өнермен өлшеңіз.</p>
+      </div>
+      <div>
+        <p style="font-weight:600;margin-bottom:1rem">Сілтемелер</p>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.5rem;cursor:pointer" onclick="goTo('home')">Басты</p>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.5rem;cursor:pointer" onclick="goTo('catalog')">Каталог</p>
+        <p style="color:var(--text-muted);font-size:0.9rem;cursor:pointer" onclick="goTo('about')">Біз туралы</p>
+      </div>
+      <div>
+        <p style="font-weight:600;margin-bottom:1rem">Байланыс</p>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.5rem">+7 778 745 8128</p>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.5rem">risawatch@mail.com</p>
+        <p style="color:var(--text-muted);font-size:0.9rem">risawatch.kz</p>
+      </div>
+    </div>
+    <div style="max-width:1200px;margin:2rem auto 0;padding-top:2rem;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:0.85rem">
+      © 2024 RisaWatch. Барлық құқықтар қорғалған.
+    </div>
+  </footer>
+</div>
+
+<!-- ── CATALOG ── -->
+<div class="page" id="page-catalog">
+  <div style="padding-top:72px">
+    <div class="section">
+      <p class="section-title serif" style="margin-bottom:0.5rem">Каталог</p>
+      <p style="color:var(--text-muted);margin-bottom:2rem" id="catalog-count">0 сағат табылды</p>
+      <div class="filter-bar">
+        <div class="search-wrap">
+          <span class="search-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="search-input" id="search-input" placeholder="Сағат іздеу..." oninput="renderCatalog()" />
+        </div>
+        <div class="filter-group" id="gender-filters">
+          <button class="filter-chip active" data-gender="all" onclick="setGender('all')">Барлығы</button>
+          <button class="filter-chip" data-gender="male" onclick="setGender('male')">Ерлер</button>
+          <button class="filter-chip" data-gender="female" onclick="setGender('female')">Әйелдер</button>
+        </div>
+        <div class="filter-group" id="type-filters">
+          <button class="filter-chip active" data-type="all" onclick="setType('all')">Барлығы</button>
+          <button class="filter-chip" data-type="mechanical" onclick="setType('mechanical')">Механикалық</button>
+          <button class="filter-chip" data-type="digital" onclick="setType('digital')">Электронды</button>
+          <button class="filter-chip" data-type="sport" onclick="setType('sport')">Спорт</button>
+          <button class="filter-chip" data-type="luxury" onclick="setType('luxury')">Luxury</button>
+        </div>
+      </div>
+      <div class="grid-3" id="catalog-grid"></div>
+      <div id="catalog-empty" style="text-align:center;padding:4rem;color:var(--text-muted);display:none">
+        <p style="font-size:3rem;margin-bottom:1rem">🔍</p>
+        <p>Сағат табылмады. Фильтрді өзгертіп көріңіз.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PRODUCT ── -->
+<div class="page" id="page-product">
+  <div class="product-page">
+    <button class="btn-outline" style="margin-bottom:2rem;display:inline-flex;align-items:center;gap:0.5rem" onclick="goTo('catalog')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Каталогқа
+    </button>
+    <div class="product-grid">
+      <div style="position:relative">
+        <img id="prod-img" src="" alt="" class="product-img" onerror="this.src='https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600&q=80'" />
+        <span id="prod-badge" class="watch-badge" style="top:1.5rem;left:1.5rem;font-size:0.8rem;padding:0.3rem 0.8rem;display:none"></span>
+      </div>
+      <div>
+        <p class="product-brand" id="prod-brand"></p>
+        <h1 class="product-name serif" id="prod-name"></h1>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem" id="prod-model"></p>
+        <div class="stars" style="margin-bottom:1rem" id="prod-stars"></div>
+        <p class="product-price" id="prod-price"></p>
+        <p class="product-desc" id="prod-desc"></p>
+        <div class="specs-grid" id="prod-specs"></div>
+        <div style="display:flex;gap:1rem;margin-bottom:1.5rem">
+          <button class="btn-primary" style="flex:1" id="prod-cart-btn">Себетке қосу</button>
+          <button class="icon-btn" id="prod-fav-btn" style="background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:0 1rem">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </button>
+        </div>
+        <div style="background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:1.2rem">
+          <div style="display:flex;align-items:center;gap:0.7rem;margin-bottom:0.7rem">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <span style="font-size:0.9rem">3-5 жұмыс күні ішінде жеткізу</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.7rem">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span style="font-size:0.9rem">100% оригинал гарантия</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="similar-section" style="margin-top:4rem">
+      <p class="section-title serif" style="margin-bottom:2rem">Ұқсас <span style="color:var(--gold)">Сағаттар</span></p>
+      <div class="grid-4" id="similar-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CHECKOUT ── -->
+<div class="page" id="page-checkout">
+  <div style="padding-top:72px">
+    <div style="max-width:800px;margin:0 auto;padding:2rem">
+      <h2 class="serif" style="font-size:2rem;margin-bottom:2rem">Төлем</h2>
+      <div style="display:flex;gap:1rem;margin-bottom:3rem" id="checkout-steps-ui">
+        <div class="checkout-step" style="flex:1;text-align:center"><div class="checkout-step-num active" id="cs1">1</div><p style="font-size:0.8rem;color:var(--gold)">Байланыс</p></div>
+        <div class="checkout-step" style="flex:1;text-align:center"><div class="checkout-step-num" id="cs2">2</div><p style="font-size:0.8rem;color:var(--text-muted)">Жеткізу</p></div>
+        <div class="checkout-step" style="flex:1;text-align:center"><div class="checkout-step-num" id="cs3">3</div><p style="font-size:0.8rem;color:var(--text-muted)">Төлем</p></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 320px;gap:2rem" id="checkout-body">
+        <div id="checkout-step-content"></div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;height:fit-content">
+          <h4 style="margin-bottom:1rem">Тапсырыс</h4>
+          <div id="checkout-cart-list"></div>
+          <div style="border-top:1px solid var(--border);padding-top:1rem;margin-top:1rem">
+            <div style="display:flex;justify-content:space-between;font-weight:700;font-size:1.1rem">
+              <span>Жиыны</span><span style="color:var(--gold)" id="checkout-total"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="checkout-success" style="text-align:center;padding:80px 2rem;display:none">
+        <div style="font-size:4rem;margin-bottom:1rem">✅</div>
+        <h2 class="serif" style="font-size:2rem;margin-bottom:1rem">Тапсырыс қабылданды!</h2>
+        <p style="color:var(--text-muted);margin-bottom:2rem">3-5 жұмыс күні ішінде жеткізіледі. Kaspi/SMS арқылы хабарланасыз.</p>
+        <div style="display:flex;gap:1rem;justify-content:center">
+          <button class="btn-primary" onclick="goTo('profile')">Тапсырыстарым</button>
+          <button class="btn-outline" onclick="goTo('home')">Басты бетке</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PROFILE ── -->
+<div class="page" id="page-profile">
+  <div class="profile-layout">
+    <div id="profile-login-prompt" style="text-align:center;padding:80px 2rem;display:none">
+      <p style="font-size:3rem;margin-bottom:1rem">👤</p>
+      <h2 class="serif" style="margin-bottom:1rem">Кіру қажет</h2>
+      <button class="btn-primary" onclick="openAuthModal('login')">Кіру</button>
+    </div>
+    <div id="profile-content" style="display:none">
+      <div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem">
+        <div style="width:64px;height:64px;border-radius:50%;background:rgba(201,169,110,0.2);display:flex;align-items:center;justify-content:center;font-size:1.5rem" id="profile-avatar"></div>
+        <div><h2 class="serif" style="font-size:1.8rem" id="profile-name"></h2><p style="color:var(--text-muted)" id="profile-email"></p></div>
+        <button class="btn-outline" style="margin-left:auto" onclick="logout()">Шығу</button>
+      </div>
+      <div class="profile-tabs">
+        <button class="profile-tab active" onclick="switchTab('orders')">Тапсырыстар</button>
+        <button class="profile-tab" onclick="switchTab('favorites')">Таңдаулылар</button>
+        <button class="profile-tab" onclick="switchTab('viewed')">Соңғы қаралған</button>
+        <button class="profile-tab" onclick="switchTab('settings')">Баптаулар</button>
+      </div>
+      <div id="profile-tab-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ADMIN ── -->
+<div class="page" id="page-admin">
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <p style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold);margin-bottom:2rem;padding-left:0.5rem">Admin Panel</p>
+      <button class="admin-nav-item active" id="adm-dashboard" onclick="adminNav('dashboard')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Аналитика
+      </button>
+      <button class="admin-nav-item" id="adm-watches" onclick="adminNav('watches')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/><path d="M16.51 17.35l-.35 3.83a2 2 0 01-2 1.82H9.83a2 2 0 01-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 019.83 1h4.35a2 2 0 011.99 1.82l.35 3.83"/></svg>Сағаттар
+      </button>
+      <button class="admin-nav-item" id="adm-orders" onclick="adminNav('orders')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>Тапсырыстар
+      </button>
+      <button class="admin-nav-item" id="adm-customers" onclick="adminNav('customers')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Клиенттер
+      </button>
+      <button class="admin-nav-item" style="margin-top:2rem;color:#ef4444" onclick="logout()">Шығу</button>
+    </aside>
+    <main class="admin-content" id="admin-content-area"></main>
+  </div>
+</div>
+
+<!-- ── ABOUT ── -->
+<div class="page" id="page-about">
+  <div style="padding-top:72px">
+    <div style="background:radial-gradient(ellipse at center,rgba(201,169,110,0.07) 0%,transparent 60%);padding:5rem 2rem;text-align:center">
+      <p class="section-title serif" style="font-size:3rem;margin-bottom:1rem">RisaWatch <span style="color:var(--gold)">туралы</span></p>
+      <p style="color:var(--text-muted);max-width:600px;margin:0 auto;line-height:1.7">Қазақстандағы ең алғашқы premium люкс сағат платформасы. Дүние жүзінің ең үздік брендтерін сіздің қолыңызға жеткіземіз.</p>
+    </div>
+    <div class="section">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:5rem">
+        <div>
+          <p class="section-title serif">Біздің <span style="color:var(--gold)">Миссия</span></p>
+          <p style="color:var(--text-muted);line-height:1.8;margin-bottom:1.5rem">RisaWatch — уақытты өнермен өлшеуге деген құмарлықтан туылған компания. Біз Rolex, Omega, Cartier, Patek Philippe сияқты дүниежүзілік люкс брендтердің оригинал сағаттарын Қазақстан нарығына алып келеміз.</p>
+          <p style="color:var(--text-muted);line-height:1.8">Әрбір сағат — бұл жай уақыт өлшеуіш ғана емес, сұлулық, шеберлік және мәдениеттің символы. Біздің мақсат — сізге сол эмоцияны сезіндіру.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-align:center"><p style="font-size:2rem;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif">100%</p><p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.3rem">Оригинал кепіл</p></div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-align:center"><p style="font-size:2rem;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif">30+</p><p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.3rem">Premium бренд</p></div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-align:center"><p style="font-size:2rem;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif">500+</p><p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.3rem">Бақытты клиент</p></div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-align:center"><p style="font-size:2rem;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif">3 күн</p><p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.3rem">Жеткізу мерзімі</p></div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-bottom:3rem">
+        <p class="section-title serif">Бізбен <span style="color:var(--gold)">Байланыс</span></p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem">
+        <a href="tel:+77787458128" class="contact-card" style="text-decoration:none;display:block;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;text-align:center;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" style="margin-bottom:1rem"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11a19.79 19.79 0 01-3-8.63A2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.72-.72a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.3rem">Телефон</p>
+          <p style="color:var(--text);font-weight:500">+7 778 745 8128</p>
+        </a>
+        <a href="mailto:7458128@mail.ru" class="contact-card" style="text-decoration:none;display:block;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;text-align:center;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" style="margin-bottom:1rem"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.3rem">Жеке Email</p>
+          <p style="color:var(--text);font-weight:500">7458128@mail.ru</p>
+        </a>
+        <a href="mailto:risawatch@mail.com" class="contact-card" style="text-decoration:none;display:block;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;text-align:center;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" style="margin-bottom:1rem"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.3rem">Компания Email</p>
+          <p style="color:var(--text);font-weight:500">risawatch@mail.com</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CART DRAWER ══ -->
+<div id="cart-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:149;display:none" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-header">
+    <h3 style="font-family:'Playfair Display',serif">Себет</h3>
+    <span style="color:var(--text-muted);font-size:0.9rem" id="cart-count-text">0 дана</span>
+    <button class="icon-btn" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items-list"></div>
+  <div class="cart-footer" id="cart-footer" style="display:none">
+    <div class="cart-total"><span>Жиыны</span><span style="color:var(--gold)" id="cart-total-text"></span></div>
+    <button class="btn-primary" style="width:100%" onclick="closeCart();goTo('checkout')">Рәсімдеу</button>
+  </div>
+</div>
+
+<!-- ══ AUTH MODAL ══ -->
+<div class="modal-overlay" id="auth-modal" style="display:none" onclick="closeAuthModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="icon-btn" style="position:absolute;top:1rem;right:1rem" onclick="closeAuthModal()">✕</button>
+    <p class="modal-title" id="auth-title">Кіру</p>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:2rem" id="auth-sub">Аккаунтқа кіріңіз</p>
+    <div id="auth-err" style="background:rgba(239,68,68,0.1);border:1px solid #ef4444;border-radius:8px;padding:0.6rem 1rem;font-size:0.85rem;color:#ef4444;margin-bottom:1rem;display:none"></div>
+    <div id="auth-reg-fields" style="display:none">
+      <div class="form-group"><label class="form-label">Аты-жөні</label><input class="form-input" id="auth-name" placeholder="Аты-жөніңізді енгізіңіз" /></div>
+      <div class="form-group"><label class="form-label">Телефон</label><input class="form-input" id="auth-phone" placeholder="+7 778 745 8128" /></div>
+    </div>
+    <div class="form-group"><label class="form-label" id="auth-email-label">Email немесе логин</label><input class="form-input" id="auth-email" placeholder="email@mail.ru" /></div>
+    <div class="form-group"><label class="form-label">Пароль</label><input class="form-input" type="password" id="auth-password" placeholder="••••••••" /></div>
+    <button class="btn-primary" style="width:100%;margin-bottom:1rem" id="auth-submit-btn" onclick="submitAuth()">Кіру</button>
+    <p style="text-align:center;color:var(--text-muted);font-size:0.9rem">
+      <span id="auth-switch-text">Аккаунтыңыз жоқ па?</span>
+      <button style="background:none;border:none;color:var(--gold);cursor:pointer;font-weight:600" onclick="toggleAuthMode()" id="auth-switch-btn">Тіркелу</button>
+    </p>
+  </div>
+</div>
+
+<!-- ══ CHAT ══ -->
+<div class="chat-widget">
+  <div class="chat-box" id="chat-box">
+    <div class="chat-header">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+      <div style="color:#000"><p style="font-weight:700;font-size:0.9rem">RisaWatch AI</p><p style="font-size:0.75rem;opacity:0.7">Сағат кеңесшісі</p></div>
+      <button style="margin-left:auto;background:none;border:none;cursor:pointer;color:#000;font-size:1.2rem" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="msg bot">Сәлем! Мен RisaWatch AI кеңесшісімін. Сізге мінсіз сағат таңдауға көмектесемін. Бюджетіңіз бен стиліңіз туралы айтып беріңіз! ⌚</div>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input-field" id="chat-input" placeholder="Сұрақ жазыңыз..." onkeydown="if(event.key==='Enter')sendChat()" />
+      <button class="chat-send" onclick="sendChat()">→</button>
+    </div>
+  </div>
+  <button class="chat-btn" id="chat-btn" onclick="toggleChat()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+  </button>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════
+const WATCHES_DATA = [
+  { id: 1, name: "Submariner Date", brand: "Rolex", model: "126610LN", price: 8950000, description: "Ең атақты су астына арналған сағат. 300м су өткізбейді, Oyster корпусы, Cerachrom безель.", image: "https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=600&q=80", gender: "male", type: "luxury", stock: 3, rating: 4.9, specs: { waterResistance: "300m", movement: "Cal. 3235", caseDiameter: "41mm", material: "Oystersteel" } },
+  { id: 2, name: "Speedmaster Moonwatch", brand: "Omega", model: "310.30.42.50.01.001", price: 6500000, description: "Айға барған алғашқы сағат. Ғарышкерлердің таңдауы. Хронограф функциясы бар.", image: "https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=600&q=80", gender: "male", type: "luxury", stock: 5, rating: 4.9, specs: { waterResistance: "50m", movement: "Cal. 3861", caseDiameter: "42mm", material: "Stainless Steel" } },
+  { id: 3, name: "Royal Oak", brand: "Audemars Piguet", model: "15510ST.OO.1320ST.06", price: 32000000, description: "Болат сағаттардың королі. Жерар Джентадың дизайны. Iconic octagonal bezel.", image: "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?w=600&q=80", gender: "male", type: "luxury", stock: 2, rating: 5.0, specs: { waterResistance: "50m", movement: "Cal. 4302", caseDiameter: "41mm", material: "Stainless Steel" } },
+  { id: 4, name: "Datejust 31", brand: "Rolex", model: "278384RBR", price: 12500000, description: "Классикалық элеганттылық. Бриллиант безельмен. Әйелдерге арналған икемді дизайн.", image: "https://images.unsplash.com/photo-1622434641406-a158123450f9?w=600&q=80", gender: "female", type: "luxury", stock: 4, rating: 4.8, specs: { waterResistance: "100m", movement: "Cal. 2236", caseDiameter: "31mm", material: "18ct Everose Gold" } },
+  { id: 5, name: "Calatrava", brand: "Patek Philippe", model: "5227G-001", price: 45000000, description: "Ең таза dress watch. Ақ алтын корпус. Ультра-жіңішке дизайн. Өте сирек.", image: "https://images.unsplash.com/photo-1639037465994-b7c27e41e7de?w=600&q=80", gender: "male", type: "luxury", stock: 1, rating: 5.0, specs: { waterResistance: "30m", movement: "Cal. 324 S C", caseDiameter: "39mm", material: "White Gold" } },
+  { id: 6, name: "Aqua Terra 150M", brand: "Omega", model: "220.10.41.21.03.001", price: 4800000, description: "Теңіз шабыттандырған дизайн. Teak pattern циферблат. Күнделікті luxury.", image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600&q=80", gender: "male", type: "luxury", stock: 7, rating: 4.7, specs: { waterResistance: "150m", movement: "Cal. 8900", caseDiameter: "41mm", material: "Stainless Steel" } },
+  { id: 7, name: "Pilot's Watch Mark XVIII", brand: "IWC", model: "IW327001", price: 5200000, description: "Авиациялық мұра. Оқылатын циферблат. Шынайы ұшқыш сағаты.", image: "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?w=600&q=80", gender: "male", type: "mechanical", stock: 6, rating: 4.7, specs: { waterResistance: "60m", movement: "Cal. 35111", caseDiameter: "40mm", material: "Stainless Steel" } },
+  { id: 8, name: "Panthere de Cartier", brand: "Cartier", model: "WSCA0007", price: 9800000, description: "Пантера тәрізді элеганттылық. Лакталған безель. Оранжевый сапфир кнопка.", image: "https://images.unsplash.com/photo-1548171916-c8fd0f4e5c23?w=600&q=80", gender: "female", type: "luxury", stock: 3, rating: 4.8, specs: { waterResistance: "30m", movement: "Cal. 1847 MC", caseDiameter: "27.5mm", material: "18ct Yellow Gold" } },
+  { id: 9, name: "G-SHOCK GA-2100", brand: "Casio", model: "GA-2100-1A1", price: 85000, description: "Ультра-тонкий G-SHOCK. Carbon Core Guard. Analog-digital дисплей.", image: "https://images.unsplash.com/photo-1551816230-ef5deaed4a26?w=600&q=80", gender: "male", type: "sport", stock: 50, rating: 4.6, specs: { waterResistance: "200m", movement: "Digital", caseDiameter: "48.5mm", material: "Resin" } },
+  { id: 10, name: "PRO TREK PRW-6000", brand: "Casio", model: "PRW-6000Y-1A", price: 180000, description: "Triple Sensor. GPS навигация. Альтиметр, барометр, компас.", image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=600&q=80", gender: "male", type: "sport", stock: 20, rating: 4.5, specs: { waterResistance: "100m", movement: "Solar", caseDiameter: "54mm", material: "Titanium" } },
+  { id: 11, name: "Seamaster Diver 300M", brand: "Omega", model: "210.30.42.20.01.001", price: 5900000, description: "Джеймс Бонд сағаты. Ceramic безель. Co-Axial Master Chronometer movement.", image: "https://images.unsplash.com/photo-1542496658-e33a6d0d0f2a?w=600&q=80", gender: "male", type: "luxury", stock: 5, rating: 4.9, specs: { waterResistance: "300m", movement: "Cal. 8800", caseDiameter: "42mm", material: "Stainless Steel" } },
+  { id: 12, name: "Santos de Cartier", brand: "Cartier", model: "WSSA0009", price: 7500000, description: "Алғашқы заманауи сағат. Авиатор Альберто Сантос-Дюмон үшін жасалған.", image: "https://images.unsplash.com/photo-1612817288484-6f916006741a?w=600&q=80", gender: "male", type: "luxury", stock: 4, rating: 4.8, specs: { waterResistance: "100m", movement: "Cal. 1847 MC", caseDiameter: "40mm", material: "Steel & Gold" } },
+  { id: 13, name: "Navitimer B01", brand: "Breitling", model: "AB0138241G1P1", price: 9200000, description: "Ұшқыштардың хронографы. Slide rule безель. 70 жылдық мұра.", image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80", gender: "male", type: "mechanical", stock: 3, rating: 4.7, specs: { waterResistance: "30m", movement: "Cal. B01", caseDiameter: "43mm", material: "Stainless Steel" } },
+  { id: 14, name: "Tank Must", brand: "Cartier", model: "WSTA0041", price: 4200000, description: "Iconic Tank дизайны. Минималистік. Dress watch классигі. Әйелдерге мінсіз.", image: "https://images.unsplash.com/photo-1618220179428-22790b461013?w=600&q=80", gender: "female", type: "luxury", stock: 8, rating: 4.7, specs: { waterResistance: "30m", movement: "Cal. 1847 MC", caseDiameter: "29.5x22mm", material: "Steel CLOUS DE PARIS" } },
+  { id: 15, name: "Apple Watch Series 9", brand: "Apple", model: "MR903LL/A", price: 350000, description: "Ең ақылды сағат. Health monitoring. S9 chip. Always-On Retina display.", image: "https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=600&q=80", gender: "female", type: "digital", stock: 30, rating: 4.7, specs: { waterResistance: "WR50", movement: "S9 chip", caseDiameter: "41mm", material: "Aluminium" } },
+  { id: 16, name: "Galaxy Watch 6 Classic", brand: "Samsung", model: "SM-R960NZSAXFE", price: 280000, description: "Rotating bezel. Wear OS. Health tracking. 3nm processor.", image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=600&q=80", gender: "male", type: "digital", stock: 25, rating: 4.5, specs: { waterResistance: "IP68", movement: "Exynos W930", caseDiameter: "47mm", material: "Stainless Steel" } },
+  { id: 17, name: "Classique Tourbillon", brand: "Breguet", model: "5367BR/12/9WU", price: 85000000, description: "Tourbilon иесі. Абрахам-Луи Брег өнері. Ең күрделі механизм.", image: "https://images.unsplash.com/photo-1628624747186-a941c476b7ef?w=600&q=80", gender: "male", type: "mechanical", stock: 1, rating: 5.0, specs: { waterResistance: "30m", movement: "Cal. 569", caseDiameter: "42mm", material: "Rose Gold" } },
+  { id: 18, name: "Luminox Navy SEAL", brand: "Luminox", model: "XS.3001", price: 320000, description: "US Navy SEAL арналып жасалған. Тәулік бойы жарықтайды. Tactical watch.", image: "https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=600&q=80", gender: "male", type: "sport", stock: 15, rating: 4.4, specs: { waterResistance: "200m", movement: "Quartz", caseDiameter: "45mm", material: "Polyurethane" } },
+  { id: 19, name: "Constellation Co-Axial", brand: "Omega", model: "123.10.38.21.52.001", price: 5100000, description: "Жұлдыз тәрізді дизайн. Diamond hour markers. Prestige lady watch.", image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80", gender: "female", type: "luxury", stock: 6, rating: 4.8, specs: { waterResistance: "100m", movement: "Cal. 8701", caseDiameter: "38mm", material: "Steel & Yellow Gold" } },
+  { id: 20, name: "Fenix 7X Pro", brand: "Garmin", model: "010-02778-01", price: 450000, description: "Ultimate outdoor smartwatch. Solar charging. Topographic maps. Multi-GNSS.", image: "https://images.unsplash.com/photo-1544117519-31a4b719223d?w=600&q=80", gender: "male", type: "sport", stock: 12, rating: 4.8, specs: { waterResistance: "100m", movement: "Solar GPS", caseDiameter: "51mm", material: "Titanium" } },
+  { id: 21, name: "Overseas Perpetual Calendar", brand: "Vacheron Constantin", model: "4300V/000R-B508", price: 125000000, description: "Ең жоғары haute horlogerie. Perpetual calendar. Rose gold браслет.", image: "https://images.unsplash.com/photo-1639037465994-b7c27e41e7de?w=600&q=80", gender: "male", type: "mechanical", stock: 1, rating: 5.0, specs: { waterResistance: "150m", movement: "Cal. 3500 QP", caseDiameter: "42.5mm", material: "Rose Gold" } },
+  { id: 22, name: "Pelagos FXD", brand: "Tudor", model: "M25707KN-0001", price: 3800000, description: "Marine Nationale серіктесі. COSC certified. Carbon fiber bezel.", image: "https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=600&q=80", gender: "male", type: "mechanical", stock: 8, rating: 4.7, specs: { waterResistance: "500m", movement: "Cal. MT5602-1U", caseDiameter: "42mm", material: "Titanium" } },
+  { id: 23, name: "Reverso Classic", brand: "Jaeger-LeCoultre", model: "Q3858522", price: 11500000, description: "Art Deco шедевр. Аударылатын корпус. Екі жақты циферблат.", image: "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?w=600&q=80", gender: "male", type: "mechanical", stock: 3, rating: 4.8, specs: { waterResistance: "30m", movement: "Cal. 822/2", caseDiameter: "28.3x47.0mm", material: "Steel" } },
+  { id: 24, name: "Lady-Datejust 28", brand: "Rolex", model: "279135RBR", price: 14000000, description: "Мұздай ақ циферблат. Diamond set. Роуз алтын браслет.", image: "https://images.unsplash.com/photo-1622434641406-a158123450f9?w=600&q=80", gender: "female", type: "luxury", stock: 3, rating: 4.9, specs: { waterResistance: "100m", movement: "Cal. 2236", caseDiameter: "28mm", material: "Everose Gold" } },
+  { id: 25, name: "ProDiver 3000", brand: "Hublot", model: "731.NX.1190.RX", price: 8200000, description: "1000м су астына дейін. Titanium корпус. Ceramic безель.", image: "https://images.unsplash.com/photo-1542496658-e33a6d0d0f2a?w=600&q=80", gender: "male", type: "sport", stock: 4, rating: 4.6, specs: { waterResistance: "1000m", movement: "HUB1240", caseDiameter: "48mm", material: "Titanium & Ceramic" } },
+  { id: 26, name: "Mikrograph LP", brand: "TAG Heuer", model: "CAR5A8Y.FT6072", price: 18000000, description: "1/100 секундты өлшейді. Carbon fiber. Дүниедегі ең нақты хронограф.", image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80", gender: "male", type: "mechanical", stock: 2, rating: 4.7, specs: { waterResistance: "100m", movement: "Cal. Mikrograph", caseDiameter: "45mm", material: "Carbon Fiber" } },
+  { id: 27, name: "Ballon Bleu 36mm", brand: "Cartier", model: "WE902075", price: 6800000, description: "Көк тас кнопка. Дөңгелек элеганттылық. Алтын корпус. Feminine luxury.", image: "https://images.unsplash.com/photo-1548171916-c8fd0f4e5c23?w=600&q=80", gender: "female", type: "luxury", stock: 5, rating: 4.8, specs: { waterResistance: "30m", movement: "Cal. 076", caseDiameter: "36mm", material: "18ct Rose Gold" } },
+  { id: 28, name: "Big Bang Integral", brand: "Hublot", model: "451.CM.0170.CM", price: 22000000, description: "Ceramic браслет. Big Bang эволюциясы. Bold мінсіз дизайн.", image: "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?w=600&q=80", gender: "male", type: "luxury", stock: 2, rating: 4.7, specs: { waterResistance: "100m", movement: "HUB1242", caseDiameter: "42mm", material: "Black Ceramic" } },
+  { id: 29, name: "Fitness Tracker Band 7", brand: "Xiaomi", model: "BHR6008GL", price: 25000, description: "1.62\" AMOLED. 14 күн заряд. SpO2, стресс мониторинг. Бюджет таңдауы.", image: "https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=600&q=80", gender: "female", type: "digital", stock: 100, rating: 4.3, specs: { waterResistance: "5ATM", movement: "Digital", caseDiameter: "41.8mm", material: "TPU" } },
+  { id: 30, name: "Ingenieur Automatic", brand: "IWC", model: "IW323902", price: 6900000, description: "Магнит өрісіне төзімді. Инженерлердің сағаты. Жасыл циферблат.", image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600&q=80", gender: "male", type: "mechanical", stock: 6, rating: 4.6, specs: { waterResistance: "300m", movement: "Cal. 32111", caseDiameter: "40mm", material: "Stainless Steel" } },
+];
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let watches = JSON.parse(localStorage.getItem('rw_watches') || 'null') || WATCHES_DATA;
+let cart = JSON.parse(localStorage.getItem('rw_cart') || '[]');
+let favorites = JSON.parse(localStorage.getItem('rw_favorites') || '[]');
+let recentlyViewed = JSON.parse(localStorage.getItem('rw_viewed') || '[]');
+let user = JSON.parse(localStorage.getItem('rw_user') || 'null');
+let orders = JSON.parse(localStorage.getItem('rw_orders') || '[]');
+let currentPage = 'home';
+let selectedWatch = null;
+let filterGenderVal = 'all';
+let filterTypeVal = 'all';
+let authMode = 'login'; // 'login' | 'register'
+let checkoutStep = 1;
+let checkoutForm = { name: '', phone: '', address: '', payment: 'kaspi' };
+let adminSection = 'dashboard';
+let profileTab = 'orders';
+let darkMode = true;
+
+function saveState() {
+  localStorage.setItem('rw_cart', JSON.stringify(cart));
+  localStorage.setItem('rw_favorites', JSON.stringify(favorites));
+  localStorage.setItem('rw_viewed', JSON.stringify(recentlyViewed));
+  localStorage.setItem('rw_user', JSON.stringify(user));
+  localStorage.setItem('rw_orders', JSON.stringify(orders));
+  localStorage.setItem('rw_watches', JSON.stringify(watches));
+}
+
+// ══════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════
+const fmt = (p) => new Intl.NumberFormat('kk-KZ', { style: 'currency', currency: 'KZT', maximumFractionDigits: 0 }).format(p);
+
+function notify(msg) {
+  const el = document.getElementById('notification');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 3000);
+}
+
+function starsHTML(rating, size = 12) {
+  let h = '';
+  for (let i = 0; i < 5; i++) {
+    h += `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor" style="opacity:${i < Math.round(rating) ? 1 : 0.25}"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+  }
+  return h;
+}
+
+function fallbackImg(img) {
+  img.src = 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600&q=80';
+}
+
+// ══════════════════════════════════════════════
+// THEME
+// ══════════════════════════════════════════════
+function toggleTheme() {
+  darkMode = !darkMode;
+  document.body.className = darkMode ? 'dark' : 'light';
+  const icon = document.getElementById('theme-icon');
+  icon.innerHTML = darkMode
+    ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
+    : '<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
+}
+
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+function goTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+  const nl = document.getElementById('nav-' + page);
+  if (nl) nl.classList.add('active');
+  currentPage = page;
+  window.scrollTo(0, 0);
+  if (page === 'catalog') renderCatalog();
+  if (page === 'home') renderHome();
+  if (page === 'checkout') renderCheckout();
+  if (page === 'profile') renderProfile();
+  if (page === 'admin') renderAdmin();
+}
+
+// ══════════════════════════════════════════════
+// WATCH CARD
+// ══════════════════════════════════════════════
+function watchCardHTML(w) {
+  const isFav = favorites.some(f => f.id === w.id);
+  const badge = w.stock <= 2 ? `<span class="watch-badge">Соңғы ${w.stock}</span>` : '';
+  const favIcon = isFav
+    ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>`
+    : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>`;
+  return `
+    <div class="watch-card" onclick="viewWatch(${w.id})">
+      ${badge}
+      <button class="card-fav" style="color:${isFav ? '#ef4444' : 'var(--text-muted)'}" onclick="event.stopPropagation();toggleFav(${w.id})">${favIcon}</button>
+      <img src="${w.image}" alt="${w.name}" class="watch-card-img" onerror="fallbackImg(this)" />
+      <div class="watch-card-body">
+        <p class="watch-brand">${w.brand}</p>
+        <p class="watch-name">${w.name}</p>
+        <div class="stars">${starsHTML(w.rating)}<span style="margin-left:6px;font-size:0.8rem;color:var(--text-muted)">${w.rating}</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.8rem">
+          <p class="watch-price">${fmt(w.price)}</p>
+          <button class="btn-primary" style="padding:0.5rem 1rem;font-size:0.8rem" onclick="event.stopPropagation();addToCart(${w.id})">Себет</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════
+// HOME
+// ══════════════════════════════════════════════
+function renderHome() {
+  const featured = watches.filter(w => w.rating >= 4.8).slice(0, 4);
+  const men = watches.filter(w => w.gender === 'male').slice(0, 4);
+  const women = watches.filter(w => w.gender === 'female').slice(0, 4);
+  const trending = watches.filter(w => w.type === 'luxury').slice(0, 4);
+  document.getElementById('home-featured').innerHTML = featured.map(watchCardHTML).join('');
+  document.getElementById('home-men').innerHTML = men.map(watchCardHTML).join('');
+  document.getElementById('home-women').innerHTML = women.map(watchCardHTML).join('');
+  document.getElementById('home-trending').innerHTML = trending.map(watchCardHTML).join('');
+}
+
+function filterBrand(brand) {
+  filterGenderVal = 'all'; filterTypeVal = 'all';
+  document.getElementById('search-input').value = brand;
+  goTo('catalog');
+}
+function filterGender(g) {
+  filterGenderVal = g;
+  document.getElementById('search-input').value = '';
+  goTo('catalog');
+}
+
+// ══════════════════════════════════════════════
+// CATALOG
+// ══════════════════════════════════════════════
+function setGender(g) {
+  filterGenderVal = g;
+  document.querySelectorAll('[data-gender]').forEach(b => b.classList.toggle('active', b.dataset.gender === g));
+  renderCatalog();
+}
+function setType(t) {
+  filterTypeVal = t;
+  document.querySelectorAll('[data-type]').forEach(b => b.classList.toggle('active', b.dataset.type === t));
+  renderCatalog();
+}
+
+function getFiltered() {
+  const q = (document.getElementById('search-input')?.value || '').toLowerCase();
+  return watches.filter(w => {
+    if (filterGenderVal !== 'all' && w.gender !== filterGenderVal) return false;
+    if (filterTypeVal !== 'all' && w.type !== filterTypeVal) return false;
+    if (q && !w.name.toLowerCase().includes(q) && !w.brand.toLowerCase().includes(q) && !w.model.toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function renderCatalog() {
+  const filtered = getFiltered();
+  document.getElementById('catalog-count').textContent = filtered.length + ' сағат табылды';
+  const grid = document.getElementById('catalog-grid');
+  const empty = document.getElementById('catalog-empty');
+  if (filtered.length === 0) { grid.innerHTML = ''; empty.style.display = 'block'; }
+  else { empty.style.display = 'none'; grid.innerHTML = filtered.map(watchCardHTML).join(''); }
+}
+
+// ══════════════════════════════════════════════
+// PRODUCT PAGE
+// ══════════════════════════════════════════════
+function viewWatch(id) {
+  const w = watches.find(x => x.id === id);
+  if (!w) return;
+  selectedWatch = w;
+  recentlyViewed = [w, ...recentlyViewed.filter(x => x.id !== w.id)].slice(0, 6);
+  saveState();
+
+  document.getElementById('prod-img').src = w.image;
+  document.getElementById('prod-img').alt = w.name;
+  document.getElementById('prod-brand').textContent = w.brand;
+  document.getElementById('prod-name').textContent = w.name;
+  document.getElementById('prod-model').textContent = 'Модель: ' + w.model;
+  document.getElementById('prod-price').textContent = fmt(w.price);
+  document.getElementById('prod-desc').textContent = w.description;
+  document.getElementById('prod-stars').innerHTML = starsHTML(w.rating, 16) + `<span style="margin-left:8px;color:var(--text-muted)">${w.rating} / 5.0</span>`;
+
+  const badge = document.getElementById('prod-badge');
+  if (w.stock <= 2) { badge.style.display = 'block'; badge.textContent = 'Соңғы ' + w.stock + ' дана'; }
+  else { badge.style.display = 'none'; }
+
+  const specLabels = { waterResistance: 'Су өткізбеу', movement: 'Механизм', caseDiameter: 'Диаметр', material: 'Материал' };
+  document.getElementById('prod-specs').innerHTML = w.specs
+    ? Object.entries(w.specs).map(([k, v]) => `<div class="spec-item"><p class="spec-label">${specLabels[k] || k}</p><p class="spec-val">${v}</p></div>`).join('')
+    : '';
+
+  const isFav = favorites.some(f => f.id === w.id);
+  const favBtn = document.getElementById('prod-fav-btn');
+  favBtn.style.color = isFav ? '#ef4444' : 'var(--text-muted)';
+  favBtn.onclick = () => { toggleFav(w.id); viewWatch(w.id); };
+  document.getElementById('prod-cart-btn').onclick = () => addToCart(w.id);
+
+  const similar = watches.filter(x => x.type === w.type && x.id !== w.id).slice(0, 4);
+  const simSec = document.getElementById('similar-section');
+  if (similar.length > 0) { simSec.style.display = 'block'; document.getElementById('similar-grid').innerHTML = similar.map(watchCardHTML).join(''); }
+  else { simSec.style.display = 'none'; }
+
+  goTo('product');
+}
+
+// ══════════════════════════════════════════════
+// CART
+// ══════════════════════════════════════════════
+function addToCart(id) {
+  const w = watches.find(x => x.id === id);
+  if (!w) return;
+  const ex = cart.find(i => i.id === w.id);
+  if (ex) cart = cart.map(i => i.id === w.id ? { ...i, qty: i.qty + 1 } : i);
+  else cart = [...cart, { ...w, qty: 1 }];
+  saveState(); updateCartBadge(); notify(w.name + ' себетке қосылды! 🛒');
+  renderCartItems();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(i => i.id !== id);
+  saveState(); updateCartBadge(); renderCartItems();
+}
+
+function updateQty(id, qty) {
+  if (qty <= 0) { removeFromCart(id); return; }
+  cart = cart.map(i => i.id === id ? { ...i, qty } : i);
+  saveState(); updateCartBadge(); renderCartItems();
+}
+
+function cartTotal() { return cart.reduce((s, i) => s + i.price * i.qty, 0); }
+function cartCount() { return cart.reduce((s, i) => s + i.qty, 0); }
+
+function updateCartBadge() {
+  const cnt = cartCount();
+  const badge = document.getElementById('cart-badge');
+  badge.style.display = cnt > 0 ? 'flex' : 'none';
+  badge.textContent = cnt;
+}
+
+function renderCartItems() {
+  const list = document.getElementById('cart-items-list');
+  const footer = document.getElementById('cart-footer');
+  const countText = document.getElementById('cart-count-text');
+  countText.textContent = cartCount() + ' дана';
+  if (cart.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--text-muted)"><p style="font-size:3rem;margin-bottom:1rem">🛒</p><p>Себет бос</p><button class="btn-primary" style="margin-top:1rem" onclick="closeCart();goTo('catalog')">Сатып алу</button></div>`;
+    footer.style.display = 'none';
+  } else {
+    list.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <img src="${item.image}" alt="${item.name}" class="cart-item-img" onerror="fallbackImg(this)" />
+        <div style="flex:1">
+          <p style="font-size:0.8rem;color:var(--gold)">${item.brand}</p>
+          <p style="font-weight:500;font-size:0.9rem;margin-bottom:0.3rem">${item.name}</p>
+          <p style="color:var(--gold);font-weight:600;font-size:0.9rem">${fmt(item.price)}</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.5rem">
+            <div class="qty-control">
+              <button class="qty-btn" onclick="updateQty(${item.id},${item.qty - 1})">−</button>
+              <span style="font-size:0.9rem;font-weight:600;min-width:20px;text-align:center">${item.qty}</span>
+              <button class="qty-btn" onclick="updateQty(${item.id},${item.qty + 1})">+</button>
+            </div>
+            <button style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:1.1rem" onclick="removeFromCart(${item.id})">🗑</button>
+          </div>
+        </div>
+      </div>`).join('');
+    footer.style.display = 'block';
+    document.getElementById('cart-total-text').textContent = fmt(cartTotal());
+  }
+}
+
+function openCart() {
+  renderCartItems();
+  document.getElementById('cart-drawer').classList.add('open');
+  document.getElementById('cart-overlay').style.display = 'block';
+}
+function closeCart() {
+  document.getElementById('cart-drawer').classList.remove('open');
+  document.getElementById('cart-overlay').style.display = 'none';
+}
+
+// ══════════════════════════════════════════════
+// FAVORITES
+// ══════════════════════════════════════════════
+function toggleFav(id) {
+  const w = watches.find(x => x.id === id);
+  if (!w) return;
+  if (favorites.some(f => f.id === id)) { favorites = favorites.filter(f => f.id !== id); notify('Таңдаулылардан өшірілді'); }
+  else { favorites = [...favorites, w]; notify('Таңдаулыларға қосылды ❤️'); }
+  saveState();
+  renderHome();
+  if (currentPage === 'catalog') renderCatalog();
+}
+
+// ══════════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════════
+function onUserClick() { user ? goTo('profile') : openAuthModal('login'); }
+
+function openAuthModal(mode) {
+  authMode = mode;
+  document.getElementById('auth-modal').style.display = 'flex';
+  document.getElementById('auth-reg-fields').style.display = mode === 'register' ? 'block' : 'none';
+  document.getElementById('auth-title').textContent = mode === 'login' ? 'Кіру' : 'Тіркелу';
+  document.getElementById('auth-sub').textContent = mode === 'login' ? 'Аккаунтқа кіріңіз' : 'Жаңа аккаунт жасаңыз';
+  document.getElementById('auth-email-label').textContent = mode === 'login' ? 'Email немесе логин' : 'Email';
+  document.getElementById('auth-submit-btn').textContent = mode === 'login' ? 'Кіру' : 'Тіркелу';
+  document.getElementById('auth-switch-text').textContent = mode === 'login' ? 'Аккаунтыңыз жоқ па?' : 'Аккаунтыңыз бар ма?';
+  document.getElementById('auth-switch-btn').textContent = mode === 'login' ? 'Тіркелу' : 'Кіру';
+  document.getElementById('auth-err').style.display = 'none';
+  document.getElementById('auth-email').value = '';
+  document.getElementById('auth-password').value = '';
+}
+
+function closeAuthModal(e) {
+  if (!e || e.target === document.getElementById('auth-modal')) document.getElementById('auth-modal').style.display = 'none';
+}
+
+function toggleAuthMode() { openAuthModal(authMode === 'login' ? 'register' : 'login'); }
+
+function showAuthErr(msg) {
+  const el = document.getElementById('auth-err');
+  el.textContent = msg; el.style.display = 'block';
+}
+
+function submitAuth() {
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  if (authMode === 'login') {
+    if (email === 'ramazan.omar' && password === 'Aiym0303!') {
+      user = { id: 'admin', name: 'Ramazan Omar', email: 'ramazan.omar', role: 'admin' };
+      saveState(); updateUserUI(); document.getElementById('auth-modal').style.display = 'none';
+      goTo('admin'); notify('Сәлем, Ramazan! 👑'); return;
+    }
+    const users = JSON.parse(localStorage.getItem('rw_users') || '[]');
+    const u = users.find(u => (u.email === email || u.phone === email) && u.password === password);
+    if (u) { user = u; saveState(); updateUserUI(); document.getElementById('auth-modal').style.display = 'none'; notify('Сәлем, ' + u.name + '! 👋'); }
+    else showAuthErr('Email немесе пароль қате.');
+  } else {
+    const name = document.getElementById('auth-name').value.trim();
+    const phone = document.getElementById('auth-phone').value.trim();
+    if (!name || !email || !password) { showAuthErr('Барлық өрістерді толтырыңыз'); return; }
+    const users = JSON.parse(localStorage.getItem('rw_users') || '[]');
+    const newUser = { id: Date.now(), name, phone, email, password, role: 'user', createdAt: new Date().toISOString() };
+    users.push(newUser); localStorage.setItem('rw_users', JSON.stringify(users));
+    user = newUser; saveState(); updateUserUI();
+    document.getElementById('auth-modal').style.display = 'none';
+    notify('Қош келдіңіз, ' + name + '! 🎉');
+  }
+}
+
+function logout() {
+  user = null; saveState(); updateUserUI(); goTo('home'); notify('Шыктыңыз 👋');
+}
+
+function updateUserUI() {
+  document.getElementById('nav-admin').style.display = (user?.role === 'admin') ? 'block' : 'none';
+  document.getElementById('nav-profile').style.display = user ? 'block' : 'none';
+}
+
+// ══════════════════════════════════════════════
+// CHECKOUT
+// ══════════════════════════════════════════════
+function renderCheckout() {
+  checkoutStep = 1;
+  checkoutForm = { name: user?.name || '', phone: '', address: '', payment: 'kaspi' };
+  document.getElementById('checkout-success').style.display = 'none';
+  document.getElementById('checkout-body').style.display = 'grid';
+  document.getElementById('checkout-total').textContent = fmt(cartTotal());
+  document.getElementById('checkout-cart-list').innerHTML = cart.map(i => `
+    <div style="display:flex;gap:0.8rem;margin-bottom:0.8rem">
+      <img src="${i.image}" alt="${i.name}" style="width:48px;height:48px;border-radius:8px;object-fit:cover" onerror="fallbackImg(this)"/>
+      <div style="flex:1"><p style="font-size:0.85rem;font-weight:500">${i.name}</p><p style="color:var(--text-muted);font-size:0.8rem">${i.qty} x ${fmt(i.price)}</p></div>
+    </div>`).join('');
+  renderCheckoutStep();
+}
+
+function updateCheckoutStepUI() {
+  for (let i = 1; i <= 3; i++) {
+    const el = document.getElementById('cs' + i);
+    el.className = 'checkout-step-num' + (i < checkoutStep ? ' done' : i === checkoutStep ? ' active' : '');
+    el.textContent = i < checkoutStep ? '✓' : i;
+  }
+}
+
+function renderCheckoutStep() {
+  updateCheckoutStepUI();
+  const cont = document.getElementById('checkout-step-content');
+  if (checkoutStep === 1) {
+    cont.innerHTML = `
+      <h3 style="margin-bottom:1.5rem">Байланыс деректері</h3>
+      <div class="form-group"><label class="form-label">Аты-жөні</label><input class="form-input" id="cf-name" value="${checkoutForm.name}" oninput="checkoutForm.name=this.value"/></div>
+      <div class="form-group"><label class="form-label">Телефон</label><input class="form-input" id="cf-phone" placeholder="+7 778 745 8128" value="${checkoutForm.phone}" oninput="checkoutForm.phone=this.value"/></div>
+      <button class="btn-primary" onclick="checkoutStep=2;renderCheckoutStep()">Жалғастыру →</button>`;
+  } else if (checkoutStep === 2) {
+    cont.innerHTML = `
+      <h3 style="margin-bottom:1.5rem">Жеткізу мекені</h3>
+      <div class="form-group"><label class="form-label">Мекен-жай</label><input class="form-input" id="cf-address" placeholder="Алматы, Абай 1" value="${checkoutForm.address}" oninput="checkoutForm.address=this.value"/></div>
+      <div style="background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:1.5rem">
+        <div style="display:flex;align-items:center;gap:0.7rem"><span>🚚</span><div><p style="font-weight:500">Стандарт жеткізу</p><p style="color:var(--text-muted);font-size:0.85rem">3-5 жұмыс күні • Тегін</p></div></div>
+      </div>
+      <div style="display:flex;gap:1rem">
+        <button class="btn-outline" onclick="checkoutStep=1;renderCheckoutStep()">Артқа</button>
+        <button class="btn-primary" onclick="checkoutStep=3;renderCheckoutStep()">Жалғастыру →</button>
+      </div>`;
+  } else if (checkoutStep === 3) {
+    cont.innerHTML = `
+      <h3 style="margin-bottom:1.5rem">Төлем тәсілі</h3>
+      <div onclick="checkoutForm.payment='kaspi';renderCheckoutStep()" style="background:${checkoutForm.payment==='kaspi'?'rgba(201,169,110,0.07)':'var(--glass)'};border:1px solid ${checkoutForm.payment==='kaspi'?'var(--gold)':'var(--border)'};border-radius:12px;padding:1rem 1.2rem;margin-bottom:1rem;cursor:pointer;display:flex;align-items:center;gap:1rem">
+        <div style="width:20px;height:20px;border-radius:50%;border:2px solid ${checkoutForm.payment==='kaspi'?'var(--gold)':'var(--border)'};display:flex;align-items:center;justify-content:center">${checkoutForm.payment==='kaspi'?'<div style="width:10px;height:10px;border-radius:50%;background:var(--gold)"></div>':''}</div>
+        <div><p style="font-weight:500">Kaspi QR</p><p style="color:var(--text-muted);font-size:0.85rem">Kaspi банк QR арқылы</p></div>
+      </div>
+      <div onclick="checkoutForm.payment='card';renderCheckoutStep()" style="background:${checkoutForm.payment==='card'?'rgba(201,169,110,0.07)':'var(--glass)'};border:1px solid ${checkoutForm.payment==='card'?'var(--gold)':'var(--border)'};border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.5rem;cursor:pointer;display:flex;align-items:center;gap:1rem">
+        <div style="width:20px;height:20px;border-radius:50%;border:2px solid ${checkoutForm.payment==='card'?'var(--gold)':'var(--border)'};display:flex;align-items:center;justify-content:center">${checkoutForm.payment==='card'?'<div style="width:10px;height:10px;border-radius:50%;background:var(--gold)"></div>':''}</div>
+        <div><p style="font-weight:500">Банктік карта</p><p style="color:var(--text-muted);font-size:0.85rem">Visa, Mastercard</p></div>
+      </div>
+      ${checkoutForm.payment==='kaspi'?`<div style="background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;margin-bottom:1.5rem"><div style="width:120px;height:120px;background:rgba(201,169,110,0.2);border-radius:12px;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700">QR</div><p style="color:var(--text-muted);font-size:0.85rem">Kaspi банк қосымшасымен сканерлеңіз</p></div>`:''}
+      <div style="display:flex;gap:1rem">
+        <button class="btn-outline" onclick="checkoutStep=2;renderCheckoutStep()">Артқа</button>
+        <button class="btn-primary" onclick="placeOrder()">Тапсырыс беру ✓</button>
+      </div>`;
+  }
+}
+
+function placeOrder() {
+  const order = {
+    id: 'RW-' + Date.now().toString().slice(-6),
+    items: [...cart], total: cartTotal(), status: 'pending',
+    address: checkoutForm.address, payment: checkoutForm.payment,
+    createdAt: new Date().toISOString(),
+    tracking: [
+      { status: 'Тапсырыс қабылданды', done: true },
+      { status: 'Өңделуде', done: false },
+      { status: 'Жолда', done: false },
+      { status: 'Жеткізілді', done: false },
+    ]
+  };
+  orders = [...orders, order]; cart = []; saveState(); updateCartBadge();
+  document.getElementById('checkout-body').style.display = 'none';
+  document.getElementById('checkout-success').style.display = 'block';
+}
+
+// ══════════════════════════════════════════════
+// PROFILE
+// ══════════════════════════════════════════════
+function renderProfile() {
+  if (!user) {
+    document.getElementById('profile-login-prompt').style.display = 'block';
+    document.getElementById('profile-content').style.display = 'none';
+    return;
+  }
+  document.getElementById('profile-login-prompt').style.display = 'none';
+  document.getElementById('profile-content').style.display = 'block';
+  document.getElementById('profile-avatar').textContent = user.name?.charAt(0).toUpperCase() || '👤';
+  document.getElementById('profile-name').textContent = user.name;
+  document.getElementById('profile-email').textContent = user.email;
+  switchTab(profileTab);
+}
+
+function switchTab(tab) {
+  profileTab = tab;
+  document.querySelectorAll('.profile-tab').forEach((b, i) => {
+    const tabs = ['orders', 'favorites', 'viewed', 'settings'];
+    b.classList.toggle('active', tabs[i] === tab);
+  });
+  const cont = document.getElementById('profile-tab-content');
+  if (tab === 'orders') {
+    cont.innerHTML = orders.length === 0
+      ? `<div style="text-align:center;padding:3rem;color:var(--text-muted)"><p style="font-size:3rem;margin-bottom:1rem">📦</p><p>Тапсырысыңыз жоқ</p><button class="btn-primary" style="margin-top:1rem" onclick="goTo('catalog')">Сатып алу</button></div>`
+      : orders.slice().reverse().map(o => `
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem">
+            <div style="display:flex;justify-content:space-between;margin-bottom:1rem">
+              <div><p style="font-weight:600">#${o.id}</p><p style="color:var(--text-muted);font-size:0.85rem">${new Date(o.createdAt).toLocaleDateString('kk-KZ')}</p></div>
+              <span class="tag tag-gold">Күтуде</span>
+            </div>
+            <div>${o.tracking?.map((s, i) => `<div class="track-step"><div class="track-dot ${s.done ? 'done' : i === o.tracking.findIndex(x => !x.done) ? 'current' : ''}"></div><div><p style="font-size:0.9rem;color:${s.done ? 'var(--text)' : 'var(--text-muted)'}">${s.status}</p></div></div>`).join('')}</div>
+            <div style="border-top:1px solid var(--border);padding-top:1rem;margin-top:1rem;display:flex;justify-content:space-between">
+              <span style="color:var(--text-muted);font-size:0.85rem">${o.items?.length} дана</span>
+              <span style="font-weight:700;color:var(--gold)">${fmt(o.total)}</span>
+            </div>
+          </div>`).join('');
+  } else if (tab === 'favorites') {
+    cont.innerHTML = favorites.length === 0
+      ? `<div style="text-align:center;padding:3rem;color:var(--text-muted)"><p style="font-size:3rem;margin-bottom:1rem">❤️</p><p>Таңдаулыларыңыз жоқ</p></div>`
+      : `<div class="grid-3">${favorites.map(watchCardHTML).join('')}</div>`;
+  } else if (tab === 'viewed') {
+    cont.innerHTML = recentlyViewed.length === 0
+      ? `<div style="text-align:center;padding:3rem;color:var(--text-muted)"><p style="font-size:3rem">👁</p><p>Қаралған сағаттар жоқ</p></div>`
+      : `<div class="grid-3">${recentlyViewed.map(watchCardHTML).join('')}</div>`;
+  } else if (tab === 'settings') {
+    cont.innerHTML = `
+      <div style="max-width:500px">
+        <h3 style="margin-bottom:1.5rem">Жеке деректер</h3>
+        <div class="form-group"><label class="form-label">Аты-жөні</label><input class="form-input" value="${user.name || ''}"/></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" value="${user.email || ''}"/></div>
+        <div class="form-group"><label class="form-label">Телефон</label><input class="form-input" value="${user.phone || ''}"/></div>
+        <button class="btn-primary" onclick="notify('Сақталды ✓')">Сақтау</button>
+      </div>`;
+  }
+}
+
+// ══════════════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════════════
+function adminNav(section) {
+  adminSection = section;
+  document.querySelectorAll('.admin-nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('adm-' + section)?.classList.add('active');
+  renderAdmin();
+}
+
+function renderAdmin() {
+  if (!user || user.role !== 'admin') { document.getElementById('admin-content-area').innerHTML = '<p style="padding:2rem;color:var(--text-muted)">Рұқсатыңыз жоқ</p>'; return; }
+  const cont = document.getElementById('admin-content-area');
+  const allUsers = JSON.parse(localStorage.getItem('rw_users') || '[]');
+
+  if (adminSection === 'dashboard') {
+    cont.innerHTML = `
+      <h2 class="serif" style="font-size:1.8rem;margin-bottom:2rem">Аналитика</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:2rem">
+        <div class="stat-card"><p class="stat-val">${watches.length}</p><p class="stat-label">Сағаттар</p></div>
+        <div class="stat-card"><p class="stat-val">${orders.length}</p><p class="stat-label">Тапсырыстар</p></div>
+        <div class="stat-card"><p class="stat-val">${allUsers.length}</p><p class="stat-label">Клиенттер</p></div>
+        <div class="stat-card"><p class="stat-val">${fmt(orders.reduce((s,o)=>s+o.total,0))}</p><p class="stat-label">Табыс</p></div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem">
+        <h3 style="margin-bottom:1.5rem">Соңғы тапсырыстар</h3>
+        <table class="table"><thead><tr><th>ID</th><th>Күні</th><th>Сомасы</th><th>Статус</th></tr></thead><tbody>
+          ${orders.slice().reverse().slice(0,5).map(o=>`<tr><td>#${o.id}</td><td>${new Date(o.createdAt).toLocaleDateString('kk-KZ')}</td><td style="color:var(--gold);font-weight:600">${fmt(o.total)}</td><td><span class="tag tag-gold">Күтуде</span></td></tr>`).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:2rem">Тапсырыс жоқ</td></tr>'}
+        </tbody></table>
+      </div>`;
+  } else if (adminSection === 'watches') {
+    cont.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem">
+        <h2 class="serif" style="font-size:1.8rem">Сағаттар</h2>
+        <button class="btn-primary" onclick="toggleAdminAddForm()">+ Сағат қосу</button>
+      </div>
+      <div id="admin-add-form" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:2rem">
+        <h3 style="margin-bottom:1.5rem">Жаңа сағат</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group"><label class="form-label">Атауы</label><input class="form-input" id="af-name"/></div>
+          <div class="form-group"><label class="form-label">Бренд</label><input class="form-input" id="af-brand"/></div>
+          <div class="form-group"><label class="form-label">Модель</label><input class="form-input" id="af-model"/></div>
+          <div class="form-group"><label class="form-label">Бағасы (₸)</label><input class="form-input" type="number" id="af-price"/></div>
+          <div class="form-group"><label class="form-label">Қор</label><input class="form-input" type="number" id="af-stock" value="10"/></div>
+          <div class="form-group"><label class="form-label">Рейтинг</label><input class="form-input" type="number" step="0.1" max="5" id="af-rating" value="4.5"/></div>
+        </div>
+        
+        <!-- IMAGE: URL немесе жүктеу -->
+        <div class="form-group">
+          <label class="form-label">Сурет URL</label>
+          <input class="form-input" id="af-image-url" placeholder="https://images.unsplash.com/..." oninput="previewAdminImg('url')"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">— немесе файл жүктеу —</label>
+          <div class="img-upload-box" onclick="document.getElementById('af-image-file').click()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" style="margin-bottom:0.5rem"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <p style="color:var(--text-muted);font-size:0.85rem">Суретті осында сүйреңіз немесе басыңыз</p>
+            <input type="file" id="af-image-file" accept="image/*" onchange="previewAdminImg('file')"/>
+          </div>
+          <img id="af-img-preview" class="img-preview" />
+        </div>
+        
+        <div class="form-group"><label class="form-label">Сипаттама</label><textarea class="form-input" id="af-desc" rows="3"></textarea></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+          <div class="form-group"><label class="form-label">Жынысы</label><select class="form-input" id="af-gender"><option value="male">Ерлер</option><option value="female">Әйелдер</option></select></div>
+          <div class="form-group"><label class="form-label">Түрі</label><select class="form-input" id="af-type"><option value="luxury">Luxury</option><option value="mechanical">Механикалық</option><option value="sport">Спорт</option><option value="digital">Электронды</option><option value="casual">Casual</option></select></div>
+        </div>
+        <div style="display:flex;gap:1rem">
+          <button class="btn-primary" onclick="adminAddWatch()">Қосу</button>
+          <button class="btn-outline" onclick="toggleAdminAddForm()">Болдырмау</button>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden">
+        <table class="table"><thead><tr><th>Сурет</th><th>Атауы</th><th>Бренд</th><th>Бағасы</th><th>Қор</th><th>Рейтинг</th><th></th></tr></thead><tbody>
+          ${watches.map(w => `<tr>
+            <td><img src="${w.image}" style="width:48px;height:48px;border-radius:8px;object-fit:cover" onerror="fallbackImg(this)"/></td>
+            <td style="font-weight:500">${w.name}</td>
+            <td><span class="tag tag-gold">${w.brand}</span></td>
+            <td style="color:var(--gold)">${fmt(w.price)}</td>
+            <td>${w.stock}</td>
+            <td>⭐ ${w.rating}</td>
+            <td><button style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:1rem" onclick="adminDeleteWatch(${w.id})">🗑</button></td>
+          </tr>`).join('')}
+        </tbody></table>
+      </div>`;
+  } else if (adminSection === 'orders') {
+    cont.innerHTML = `
+      <h2 class="serif" style="font-size:1.8rem;margin-bottom:2rem">Тапсырыстар</h2>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden">
+        <table class="table"><thead><tr><th>ID</th><th>Күні</th><th>Сомасы</th><th>Өнімдер</th><th>Статус</th></tr></thead><tbody>
+          ${orders.length === 0 ? '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:2rem">Тапсырыс жоқ</td></tr>' : orders.slice().reverse().map(o=>`<tr><td style="font-weight:600">#${o.id}</td><td style="color:var(--text-muted)">${new Date(o.createdAt).toLocaleDateString('kk-KZ')}</td><td style="color:var(--gold);font-weight:600">${fmt(o.total)}</td><td>${o.items?.length} дана</td><td><span class="tag tag-gold">Күтуде</span></td></tr>`).join('')}
+        </tbody></table>
+      </div>`;
+  } else if (adminSection === 'customers') {
+    cont.innerHTML = `
+      <h2 class="serif" style="font-size:1.8rem;margin-bottom:2rem">Клиенттер</h2>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden">
+        <table class="table"><thead><tr><th>Аты-жөні</th><th>Email</th><th>Телефон</th><th>Тіркелген</th></tr></thead><tbody>
+          ${allUsers.length === 0 ? '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:2rem">Клиент жоқ</td></tr>' : allUsers.map(u=>`<tr><td style="font-weight:500">${u.name}</td><td style="color:var(--text-muted)">${u.email}</td><td style="color:var(--text-muted)">${u.phone||'-'}</td><td style="color:var(--text-muted)">${new Date(u.createdAt).toLocaleDateString('kk-KZ')}</td></tr>`).join('')}
+        </tbody></table>
+      </div>`;
+  }
+}
+
+function toggleAdminAddForm() {
+  const f = document.getElementById('admin-add-form');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+let adminImgDataUrl = null;
+
+function previewAdminImg(source) {
+  const preview = document.getElementById('af-img-preview');
+  if (source === 'url') {
+    const url = document.getElementById('af-image-url').value;
+    adminImgDataUrl = null;
+    if (url) { preview.src = url; preview.style.display = 'block'; }
+    else { preview.style.display = 'none'; }
+  } else {
+    const file = document.getElementById('af-image-file').files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      adminImgDataUrl = e.target.result;
+      document.getElementById('af-image-url').value = '';
+      preview.src = adminImgDataUrl; preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function adminAddWatch() {
+  const name = document.getElementById('af-name').value.trim();
+  const brand = document.getElementById('af-brand').value.trim();
+  const imageUrl = document.getElementById('af-image-url').value.trim();
+  const image = adminImgDataUrl || imageUrl || 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600&q=80';
+  const w = {
+    id: Date.now(), name, brand,
+    model: document.getElementById('af-model').value,
+    price: Number(document.getElementById('af-price').value),
+    stock: Number(document.getElementById('af-stock').value),
+    rating: Number(document.getElementById('af-rating').value),
+    description: document.getElementById('af-desc').value,
+    image, gender: document.getElementById('af-gender').value,
+    type: document.getElementById('af-type').value,
+    specs: { waterResistance: '-', movement: '-', caseDiameter: '-', material: '-' }
+  };
+  watches = [...watches, w]; adminImgDataUrl = null;
+  saveState(); notify('Сағат қосылды ✓'); adminNav('watches');
+}
+
+function adminDeleteWatch(id) {
+  watches = watches.filter(w => w.id !== id);
+  saveState(); notify('Сағат өшірілді'); renderAdmin();
+}
+
+// ══════════════════════════════════════════════
+// CHATBOT
+// ══════════════════════════════════════════════
+function toggleChat() {
+  const box = document.getElementById('chat-box');
+  box.classList.toggle('open');
+}
+function openChat() { document.getElementById('chat-box').classList.add('open'); }
+
+function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML += `<div class="msg user">${msg}</div>`;
+  msgs.innerHTML += `<div class="msg bot" id="chat-typing">⏳ Ойлануда...</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  setTimeout(() => {
+    const lower = msg.toLowerCase();
+    let response = '';
+    if (lower.includes('rolex') || lower.includes('ролекс')) {
+      const rolexes = watches.filter(w => w.brand === 'Rolex');
+      response = `Rolex — дүниедегі ең танымал сағат бренді! Бізде ${rolexes.length} Rolex бар: ${rolexes.map(w => w.name + ' (' + fmt(w.price) + ')').join(', ')}.`;
+    } else if (lower.includes('omega')) {
+      response = `Omega — ғарышкерлер сағаты! Moonwatch — Джеймс Бонд таңдауы!`;
+    } else if (lower.includes('бюджет') || lower.includes('арзан')) {
+      const b = watches.filter(w => w.price < 500000).sort((a,b)=>a.price-b.price).slice(0,3);
+      response = `Бюджет сағаттар: ${b.map(w => w.brand + ' ' + w.name + ' — ' + fmt(w.price)).join(', ')}.`;
+    } else if (lower.includes('люкс') || lower.includes('luxury') || lower.includes('қымбат')) {
+      const lux = watches.filter(w => w.type === 'luxury').sort((a,b)=>b.price-a.price).slice(0,3);
+      response = `Люкс коллекциямыз: ${lux.map(w => w.brand + ' ' + w.name + ' — ' + fmt(w.price)).join(', ')}.`;
+    } else if (lower.includes('әйел') || lower.includes('female')) {
+      const f = watches.filter(w => w.gender === 'female').slice(0,3);
+      response = `Әйелдерге: ${f.map(w => w.brand + ' ' + w.name).join(', ')}. Cartier — классикалық таңдау!`;
+    } else if (lower.includes('спорт') || lower.includes('sport')) {
+      const s = watches.filter(w => w.type === 'sport').slice(0,3);
+      response = `Спорт сағаттар: ${s.map(w => w.brand + ' ' + w.name + ' — ' + fmt(w.price)).join(', ')}.`;
+    } else if (lower.includes('рахмет') || lower.includes('спасибо')) {
+      response = `Кез келген сұрағыңызда қолдамын! RisaWatch-те сапалы сатып алу! ⌚✨`;
+    } else if (lower.includes('сыйлық') || lower.includes('gift')) {
+      response = `Сыйлыққа: Omega Seamaster, Cartier Tank, немесе Rolex Datejust! 🎁`;
+    } else {
+      const rec = watches[Math.floor(Math.random() * watches.length)];
+      response = `Сізге ${rec.brand} ${rec.name} ұсынамын — ${fmt(rec.price)}. Рейтинг: ${rec.rating}/5.0.`;
+    }
+    document.getElementById('chat-typing')?.remove();
+    msgs.innerHTML += `<div class="msg bot">${response}</div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 800);
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+updateUserUI();
+updateCartBadge();
+renderHome();
+</script>
+</body>
+</html>
